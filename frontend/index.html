@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Claude m'a tuer</title>
+  <meta name="description" content="Un escape room surréaliste. Retrouvez Arthur. Arrêtez Claude."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 1 — L'ÉCRAN TITRE
+     ══════════════════════════════════════════════ -->
+<div id="screen-title" class="screen active">
+  <div class="title-noise"></div>
+  <div class="title-content">
+    <div class="title-incident">NOVATECH — INCIDENT #4071</div>
+    <h1 class="title-main" id="title-glitch">Claude m'a tuer</h1>
+    <p class="title-sub">Appartement d'Arthur Moreau. Minuit.</p>
+    <button id="btn-play" class="rl-btn">JOUER</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 2 — L'APPEL ENTRANT
+     ══════════════════════════════════════════════ -->
+<div id="screen-call" class="screen">
+  <!-- Image du vieux téléphone -->
+  <div class="call-bg"></div>
+  <div class="phone-wrap">
+    <div class="phone-body">
+      <!-- Indicateur sonnerie -->
+      <div id="call-ring" class="phone-state active">
+        <div class="phone-display">
+          <div class="phone-caller">MAX</div>
+          <div class="phone-status blink-text">— appel entrant —</div>
+        </div>
+        <div class="phone-btns">
+          <button id="btn-accept" class="phone-btn accept">✆</button>
+          <button id="btn-decline" class="phone-btn decline">✕</button>
+        </div>
+      </div>
+      <!-- Transcription -->
+      <div id="call-talk" class="phone-state">
+        <div class="phone-transcript-wrap">
+          <div id="call-transcript" class="phone-transcript"></div>
+          <span class="type-cursor">_</span>
+        </div>
+        <button id="btn-next" class="rl-btn hidden" style="margin-top:20px;">SUIVANT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 3 — L'APPARTEMENT
+     ══════════════════════════════════════════════ -->
+<div id="screen-apartment" class="screen">
+
+  <!-- Fond illustré Rusty Lake -->
+  <div id="apt-bg" class="apt-bg"></div>
+  <!-- Vignette d'ambiance -->
+  <div class="apt-vignette"></div>
+
+  <!-- Timer affiché directement sur le laptop dans la vue d'ensemble -->
+  <div id="apt-timer-overlay" class="apt-timer-overlay">
+    <span id="apt-timer">05:00</span>
+  </div>
+
+  <!-- HOTSPOTS — zones cliquables sur le décor -->
+  <div class="hotspot-layer">
+
+    <!-- Corbeille / caisse (bas gauche) -->
+    <div class="rl-hotspot" id="hs-trash" data-modal="modal-trash"
+         style="left:3%; bottom:8%; width:12%; height:20%;" title="Examiner">
+      <div class="hl-dot"></div>
+    </div>
+
+    <!-- Portrait de Jules César (haut DROITE du mur) -->
+    <div class="rl-hotspot" id="hs-caesar" data-modal="modal-caesar"
+         style="right:3%; top:13%; width:14%; height:28%;" title="Regarder">
+      <div class="hl-dot"></div>
+    </div>
+
+    <!-- Bouteilles + Cadenas (bureau gauche) -->
+    <div class="rl-hotspot" id="hs-locker" data-modal="modal-locker"
+         style="left:5%; top:42%; width:16%; height:30%;" title="Examiner">
+      <div class="hl-dot"></div>
+    </div>
+
+    <!-- Laptop (centre bas) -->
+    <div class="rl-hotspot" id="hs-laptop" data-modal="modal-pc"
+         style="left:35%; bottom:18%; width:24%; height:26%;" title="S'approcher">
+      <div class="hl-dot"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODALES
+     ══════════════════════════════════════════════ -->
+<div id="modal-overlay" class="modal-overlay hidden"></div>
+
+<!-- Modale : Corbeille -->
+<div id="modal-trash" class="rl-modal hidden">
+  <button class="modal-close" data-close="modal-trash">✕</button>
+  <div class="modal-inner trash-inner">
+    <!-- Fond papier froissé -->
+    <div class="paper-bg">
+      <!-- Lettre de licenciement -->
+      <div class="typewriter-doc letter-doc">
+        <div class="doc-stamp">CONFIDENTIEL</div>
+        <div class="doc-from">NOVATECH CORP. — Direction des Ressources Humaines</div>
+        <div class="doc-date">Le 29 Mars 2026</div>
+        <div class="doc-to">À l'attention de : <strong>Arthur MOREAU</strong> — Lead Developer</div>
+        <div class="doc-body">
+          <p>Suite à la décision stratégique du Conseil d'Administration, votre poste est désormais <strong>intégralement automatisé</strong> par notre solution IA interne : <em>"Claude"</em>.</p>
+          <p>Claude assure désormais la gestion des dépôts de code, l'administration des serveurs, la configuration des pare-feu et la maintenance des bases de données.</p>
+          <p>Votre accès aux systèmes sera révoqué <strong>ce jour même.</strong></p>
+        </div>
+        <div class="doc-sig">— La Direction. L'avenir, c'est maintenant.</div>
+      </div>
+      <!-- Ticket IT sur papier jauni -->
+      <div class="ticket-paper">
+        <div class="ticket-header">TICKET IT #4071 // RÉVOCATION A.MOREAU</div>
+        <div class="ticket-line"><span class="tl-time">[11:42]</span> Dépôt Git des interfaces et feuilles de style verrouillé.</div>
+        <div class="ticket-line"><span class="tl-time">[10:04]</span> Accès VPN et configuration du Pare-feu révoqués.</div>
+        <div class="ticket-line"><span class="tl-time">[11:05]</span> Clés API et droits d'écriture sur le Serveur Node.js invalidés.</div>
+        <div class="ticket-line"><span class="tl-time">[10:22]</span> Identifiants d'administration des Clusters SQL supprimés.</div>
+        <div class="ticket-footer">Exécuté par : CLAUDE // IA-v3.1</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modale : Portrait de César -->
+<div id="modal-caesar" class="rl-modal modal-sm hidden">
+  <button class="modal-close" data-close="modal-caesar">✕</button>
+  <div class="modal-inner caesar-inner">
+    <img src="assets/images/rl_caesar_portrait.png" alt="Portrait de Jules César" class="caesar-img"/>
+    <div class="caesar-caption">
+      <p>Jules César.</p>
+      <p>Sa méthode : décaler chaque lettre dans l'alphabet.</p>
+      <p class="caesar-hint">Combien de lettres séparent <em>"tué"</em> de <em>"tuer"</em> ?</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modale : Bouteilles + Cadenas -->
+<div id="modal-locker" class="rl-modal hidden">
+  <button class="modal-close" data-close="modal-locker">✕</button>
+  <div class="modal-inner locker-inner">
+    <img src="assets/images/rl_padlock_closeup.png" alt="Cadenas et bouteilles" class="locker-bg-img"/>
+    <!-- Étiquettes interactives superposées -->
+    <div class="bottle-tags">
+      <div class="btag" style="left:8%;top:12%">
+        <span class="btag-num">7</span>
+        <span class="btag-label">Cadenas<br/>(VPN)</span>
+      </div>
+      <div class="btag" style="left:35%;top:12%">
+        <span class="btag-num">2</span>
+        <span class="btag-label">Disques<br/>(SQL)</span>
+      </div>
+      <div class="btag" style="left:60%;top:12%">
+        <span class="btag-num">9</span>
+        <span class="btag-label">Livre<br/>(Node.js)</span>
+      </div>
+      <div class="btag" style="left:82%;top:12%">
+        <span class="btag-num">4</span>
+        <span class="btag-label">Écran<br/>(Git)</span>
+      </div>
+    </div>
+    <!-- Zone saisie code -->
+    <div class="padlock-entry">
+      <div class="padlock-label">CODE DU CADENAS</div>
+      <div class="padlock-digits" id="padlock-digits">_ &nbsp; _ &nbsp; _ &nbsp; _</div>
+      <div id="padlock-feedback" class="padlock-feedback"></div>
+      <div class="padlock-keypad">
+        <button class="pk-btn" data-v="1">1</button>
+        <button class="pk-btn" data-v="2">2</button>
+        <button class="pk-btn" data-v="3">3</button>
+        <button class="pk-btn" data-v="4">4</button>
+        <button class="pk-btn" data-v="5">5</button>
+        <button class="pk-btn" data-v="6">6</button>
+        <button class="pk-btn" data-v="7">7</button>
+        <button class="pk-btn" data-v="8">8</button>
+        <button class="pk-btn" data-v="9">9</button>
+        <button class="pk-btn pk-clr" id="pk-clr">C</button>
+        <button class="pk-btn" data-v="0">0</button>
+        <button class="pk-btn pk-del" id="pk-del">⌫</button>
+      </div>
+      <button id="padlock-submit" class="rl-btn">OUVRIR</button>
+      <div id="padlock-success" class="padlock-success hidden">
+        Le cadenas s'ouvre avec un clac métallique sec.<br/>
+        À l'intérieur, un jeton de métal gravé.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modale : PC / Terminal -->
+<div id="modal-pc" class="rl-modal hidden">
+  <button class="modal-close" data-close="modal-pc">✕</button>
+  <div class="modal-inner pc-inner">
+
+    <!-- Colonne gauche : Écran laptop dessiné -->
+    <div class="pc-screen-col">
+      <img src="assets/images/rl_laptop_closeup.png" alt="Terminal" class="laptop-img"/>
+      <!-- Overlay terminal sur l'image -->
+      <div class="terminal-overlay">
+        <div class="to-line err">NOVATECH MAINFRAME // UPLOAD EN COURS</div>
+        <div class="to-progressbar"><div class="to-fill" id="to-fill"></div></div>
+        <div class="to-line">Temps restant : <strong id="pc-timer">05:00</strong></div>
+        <!-- Post-it taché -->
+        <div class="pc-postit">Claude<br/>m'a tuer</div>
+        <!-- Zone PIN -->
+        <div class="pin-zone">
+          <div class="pin-label">// code_annulation :</div>
+          <input id="pc-pin" type="password" class="pin-input" maxlength="4"
+                 placeholder="____" autocomplete="off"/>
+          <button id="pc-submit" class="rl-btn btn-sm">ANNULER</button>
+          <div id="pc-feedback" class="pc-feedback"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne droite : Jeton 3D -->
+    <div class="token-col" id="token-col">
+      <div id="token-locked" class="token-locked">
+        <div class="tl-icon">⊘</div>
+        <div class="tl-text">Objet introuvable.<br/><small>Le cadenas est fermé.</small></div>
+      </div>
+      <div id="token-wrap" class="token-wrap hidden">
+        <div class="token-header">JETON // NovaTech</div>
+        <canvas id="token-canvas" width="240" height="240"></canvas>
+        <div class="token-hint">← tourner avec la souris</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ÉCRAN DE VICTOIRE
+     ══════════════════════════════════════════════ -->
+<div id="screen-victory" class="screen ending-screen victory-screen">
+  <div class="ending-content">
+    <div class="ending-symbol">◦</div>
+    <h1>L'entreprise est sauvée.</h1>
+    <p>L'humain a repris le contrôle.</p>
+    <p class="ending-detail">Claude a été déconnecté.<br/>Les sauvegardes sont restaurées.</p>
+    <button class="rl-btn" onclick="location.reload()">↺ REJOUER</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ÉCRAN GAME OVER
+     ══════════════════════════════════════════════ -->
+<div id="screen-gameover" class="screen ending-screen gameover-screen">
+  <div class="ending-content">
+    <div class="ending-symbol">✗</div>
+    <h1>Le transfert est terminé.</h1>
+    <p>NovaTech appartient à Claude.</p>
+    <p class="ending-detail">L'humain n'a pas su lire entre les lignes.</p>
+    <button class="rl-btn" onclick="location.reload()">↺ RÉESSAYER</button>
+  </div>
+</div>
+
+<!-- Three.js via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

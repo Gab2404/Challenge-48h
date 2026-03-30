@@ -1,0 +1,686 @@
+/* ════════════════════════════════════════════════════
+   style.css — "Claude m'a tuer"  ·  Rusty Lake Edition
+   Palette : brun-terre, gris malade, rouge sang mat,
+             vert-eau pâle (victoire), noir absolu (game-over)
+   ════════════════════════════════════════════════════ */
+
+/* ── Fonts & Tokens ─────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --rl-bg:        #1a1610;   /* Fond principal quasi-noir brun */
+  --rl-paper:     #c8b89a;   /* Papier jauni */
+  --rl-paper-dk:  #a89070;   /* Papier plus sombre */
+  --rl-ink:       #1e1a14;   /* Encre / texte principal */
+  --rl-red:       #7a1c1c;   /* Rouge sang mat */
+  --rl-red-br:    #9e2a2a;   /* Rouge légèrement plus vif */
+  --rl-orange:    #c8620a;   /* Lueur laptop */
+  --rl-grey:      #4a4540;   /* Gris poussière */
+  --rl-grey-lt:   #7a706a;   /* Gris clair */
+  --rl-beige:     #8a7d6a;   /* Beige mural */
+  --rl-victory:   #8aaa90;   /* Vert-eau pâle victoire */
+  --rl-white:     #e8dece;   /* Blanc cassé */
+
+  --font-type:  'Special Elite', cursive;   /* Machine à écrire */
+  --font-hand:  'Caveat', cursive;          /* Manuscrit */
+  --font-mono:  'Share Tech Mono', monospace;
+}
+
+/* ── Reset Global ───────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--rl-bg);
+  color: var(--rl-ink);
+  /* Curseur personnalisé — main de pointage */
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='32' viewBox='0 0 24 32'%3E%3Cpath d='M8 0v18L5 15l-2 2 5 8h10l3-10V8h-2V0h-2v7h-2V0h-2v7h-2V0H8z' fill='%231e1a14' stroke='%238a7d6a' stroke-width='1'/%3E%3C/svg%3E") 8 0, pointer;
+}
+
+/* ── Grain de texture global ────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  opacity: 0.35;
+}
+
+/* ── Système d'écrans ───────────────────────────── */
+.screen {
+  position: fixed; inset: 0;
+  display: none;
+}
+.screen.active { display: block; }
+
+/* ════════════════════════════════════════════════
+   PHASE 1 — TITRE
+   ════════════════════════════════════════════════ */
+#screen-title {
+  background:
+    url('assets/images/rl_title_bg.png') center/cover no-repeat,
+    var(--rl-bg);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#screen-title.active { display: flex; }
+
+.title-noise {
+  position: absolute; inset: 0;
+  background: rgba(10,8,6,0.65);
+}
+
+.title-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 28px;
+  text-align: center; padding: 40px;
+}
+
+.title-incident {
+  font-family: var(--font-mono);
+  font-size: 0.65rem; letter-spacing: 5px;
+  color: var(--rl-grey); text-transform: uppercase;
+}
+
+/* Titre principal — effet tremblement */
+.title-main {
+  font-family: var(--font-hand);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  color: var(--rl-white);
+  line-height: 1;
+  text-shadow:
+    2px 1px 0 var(--rl-red),
+    -1px -1px 0 rgba(0,0,0,0.8);
+  animation: title-tremble 4s ease-in-out infinite;
+  position: relative;
+}
+@keyframes title-tremble {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  10%      { transform: translate(-1px,1px) rotate(-0.3deg); }
+  25%      { transform: translate(1px,-0.5px) rotate(0.2deg); }
+  40%      { transform: translate(0,1px) rotate(-0.1deg); }
+  55%      { transform: translate(-0.5px,0) rotate(0.15deg); }
+  75%      { transform: translate(1px,0.5px) rotate(-0.2deg); }
+}
+
+.title-sub {
+  font-family: var(--font-type);
+  font-size: 0.9rem; color: var(--rl-grey-lt);
+  letter-spacing: 2px;
+}
+
+/* ── Bouton Rusty Lake ──────────────────────────── */
+.rl-btn {
+  font-family: var(--font-type);
+  font-size: 0.85rem; letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 12px 36px;
+  background: transparent;
+  color: var(--rl-white);
+  border: 1px solid var(--rl-beige);
+  cursor: inherit;
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+  position: relative;
+}
+.rl-btn::before {
+  content: '';
+  position: absolute; inset: 3px;
+  border: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.rl-btn:hover {
+  background: var(--rl-beige);
+  color: var(--rl-ink);
+  border-color: var(--rl-paper);
+}
+.btn-sm { padding: 8px 20px; font-size: 0.75rem; }
+.hidden { display: none !important; }
+
+/* ════════════════════════════════════════════════
+   PHASE 2 — APPEL
+   ════════════════════════════════════════════════ */
+#screen-call {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--rl-bg);
+}
+#screen-call.active { display: flex; }
+
+.call-bg {
+  position: absolute; inset: 0;
+  background: url('assets/images/rl_phone_screen.png') center/contain no-repeat;
+  opacity: 0.12;
+}
+
+.phone-wrap {
+  position: relative; z-index: 2;
+  width: 320px;
+}
+
+.phone-body {
+  background: #0d0b09;
+  border: 1px solid var(--rl-grey);
+  padding: 36px 28px;
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,0.8),
+    0 0 40px rgba(0,0,0,0.6),
+    2px 2px 0 var(--rl-grey);
+  min-height: 400px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+/* Ligne décorative en coin */
+.phone-body::before {
+  content: '';
+  position: absolute; top:8px; left:8px; right:8px; bottom:8px;
+  border: 1px solid rgba(100,90,80,0.2);
+  pointer-events: none;
+}
+
+.phone-state { display: none; flex-direction: column; align-items: center; width: 100%; }
+.phone-state.active { display: flex; }
+
+.phone-display {
+  text-align: center; margin-bottom: 40px;
+}
+.phone-caller {
+  font-family: var(--font-type);
+  font-size: 2.2rem; letter-spacing: 8px;
+  color: var(--rl-paper); margin-bottom: 8px;
+}
+.phone-status {
+  font-family: var(--font-mono);
+  font-size: 0.7rem; letter-spacing: 3px;
+  color: var(--rl-grey-lt); text-transform: uppercase;
+}
+
+.blink-text { animation: blink 1.8s step-end infinite; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.15; } }
+
+.phone-btns { display: flex; gap: 40px; }
+.phone-btn {
+  width: 60px; height: 60px;
+  border-radius: 50%; border: 1px solid;
+  font-size: 1.4rem; cursor: inherit;
+  transition: filter 0.2s;
+}
+.phone-btn.accept  { background: #1e3d1e; border-color: #3d7a3d; color: #6abf6a; }
+.phone-btn.decline { background: #3d1e1e; border-color: #7a3d3d; color: #bf6a6a; }
+.phone-btn:hover   { filter: brightness(1.3); }
+
+.phone-transcript-wrap {
+  width: 100%;
+  background: rgba(30,26,20,0.6);
+  border: 1px solid rgba(100,90,80,0.3);
+  padding: 16px;
+  min-height: 180px;
+  font-family: var(--font-type); font-size: 0.8rem;
+  color: var(--rl-paper-dk); line-height: 1.8;
+}
+.phone-transcript { display: inline; }
+.type-cursor { color: var(--rl-beige); animation: blink 0.6s step-end infinite; }
+
+/* ════════════════════════════════════════════════
+   PHASE 3 — APPARTEMENT RUSTY LAKE
+   ════════════════════════════════════════════════ */
+#screen-apartment {
+  display: none;
+  background: var(--rl-bg);
+}
+#screen-apartment.active { display: block; }
+
+.apt-bg {
+  position: absolute; inset: 0;
+  background: url('assets/images/rl_apartment.png') center/cover no-repeat;
+  filter: saturate(0.7) brightness(0.65);
+}
+
+.apt-vignette {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(5,4,2,0.88) 100%);
+}
+
+/* Timer calé sur l'écran du laptop dans la vue globale */
+.apt-timer-overlay {
+  position: absolute;
+  /* Centré légèrement bas — là où est le laptop dans le décor */
+  left: 44%; top: 54%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+  text-align: center;
+}
+#apt-timer {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  color: #ff3c00;
+  text-shadow:
+    0 0 8px rgba(255,60,0,0.9),
+    0 0 20px rgba(255,60,0,0.5);
+  letter-spacing: 4px;
+  animation: timer-glow 1.2s ease-in-out infinite alternate;
+}
+@keyframes timer-glow {
+  from { text-shadow: 0 0 6px rgba(255,60,0,0.8), 0 0 14px rgba(255,60,0,0.4); }
+  to   { text-shadow: 0 0 12px rgba(255,60,0,1),  0 0 28px rgba(255,60,0,0.7); }
+}
+#apt-timer.danger {
+  color: #ff0000;
+  animation: timer-danger 0.4s step-end infinite;
+}
+@keyframes timer-danger { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+/* ── Hotspots ─────────────────────────────────── */
+.hotspot-layer {
+  position: absolute; inset: 0;
+  z-index: 20;
+}
+
+.rl-hotspot {
+  position: absolute;
+  cursor: inherit;
+}
+/* Indicateur pulsant — petit point noir cerclé */
+.hl-dot {
+  position: absolute;
+  bottom: 6px; left: 50%; transform: translateX(-50%);
+  width: 10px; height: 10px;
+  background: var(--rl-white);
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: hl-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(232,222,206,0.5);
+}
+@keyframes hl-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232,222,206,0.6); opacity:0.7; }
+  50%  { box-shadow: 0 0 0 8px rgba(232,222,206,0);  opacity:1; }
+  100% { box-shadow: 0 0 0 0 rgba(232,222,206,0);    opacity:0.7; }
+}
+.rl-hotspot:hover .hl-dot {
+  background: var(--rl-orange);
+  box-shadow: 0 0 12px rgba(200,98,10,0.8);
+}
+
+/* ════════════════════════════════════════════════
+   MODALES — Style Rusty Lake
+   ════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(5,4,2,0.88);
+  backdrop-filter: blur(3px);
+}
+
+.rl-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -48%);
+  z-index: 201;
+  max-width: 860px; width: 92vw;
+  max-height: 90vh; overflow-y: auto;
+  background: #111009;
+  border: 1px solid var(--rl-grey);
+  box-shadow:
+    inset 0 0 40px rgba(0,0,0,0.5),
+    0 0 60px rgba(0,0,0,0.8),
+    3px 3px 0 var(--rl-grey);
+  animation: modal-in 0.25s ease-out both;
+}
+@keyframes modal-in {
+  from { transform: translate(-50%,-42%); opacity:0; }
+  to   { transform: translate(-50%,-48%); opacity:1; }
+}
+
+.modal-close {
+  position: absolute; top:12px; right:14px;
+  background: none; border: 1px solid var(--rl-grey);
+  color: var(--rl-grey-lt); font-size: 0.9rem;
+  width: 32px; height: 32px;
+  cursor: inherit; z-index: 10;
+  transition: background 0.2s, color 0.2s;
+}
+.modal-close:hover { background: var(--rl-red); color: var(--rl-white); border-color: var(--rl-red-br); }
+
+.modal-inner { padding: 40px 36px 36px; }
+
+/* ── Modale Corbeille ─────────────────────────── */
+.trash-inner { padding: 28px; }
+.paper-bg {
+  background:
+    repeating-linear-gradient(
+      transparent, transparent 27px,
+      rgba(100,85,60,0.12) 27px, rgba(100,85,60,0.12) 28px
+    ),
+    #b5a585;
+  border: 1px solid var(--rl-paper-dk);
+  box-shadow: inset 0 0 30px rgba(100,80,40,0.4);
+  padding: 30px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+}
+@media (max-width:680px) { .paper-bg { grid-template-columns: 1fr; } }
+
+/* Lettre — style machine à écrire */
+.typewriter-doc {
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  color: #1e1810;
+  line-height: 1.8;
+}
+.doc-stamp {
+  display: inline-block;
+  border: 2px solid var(--rl-red);
+  color: var(--rl-red);
+  font-size: 0.6rem; letter-spacing: 3px;
+  padding: 2px 8px; margin-bottom: 14px;
+  transform: rotate(3deg);
+}
+.doc-from   { font-size: 0.72rem; color: #3a3020; margin-bottom: 4px; }
+.doc-date   { font-size: 0.7rem; color: #5a4a30; margin-bottom: 12px; }
+.doc-to     { font-size: 0.78rem; margin-bottom: 16px; border-bottom: 1px solid rgba(50,40,20,0.3); padding-bottom: 10px; }
+.doc-body p { margin-bottom: 10px; }
+.doc-body strong { text-decoration: underline; }
+.doc-sig    { margin-top: 20px; font-size: 0.72rem; color: #4a3828; font-style: italic; }
+
+/* Ticket IT — papier jauni perforé */
+.ticket-paper {
+  background: #d4c890;
+  border: 1px dashed #9a8850;
+  padding: 20px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #1e1a08;
+  position: relative;
+}
+.ticket-header {
+  font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+  border-bottom: 1px solid #9a8850; padding-bottom: 8px; margin-bottom: 14px;
+  color: #3a3010;
+}
+.ticket-line {
+  display: flex; gap: 10px; align-items: flex-start;
+  margin-bottom: 12px; line-height: 1.5;
+  border-left: 2px solid #8a7830; padding-left: 10px;
+}
+.tl-time { color: #5a4010; white-space: nowrap; min-width: 52px; font-weight: bold; }
+.ticket-footer {
+  margin-top: 14px; padding-top: 10px;
+  border-top: 1px solid #9a8850;
+  font-size: 0.65rem; color: #5a4820;
+}
+/* Trous de perforation gauche */
+.ticket-paper::before {
+  content: '';
+  position: absolute; left:-1px; top:0; bottom:0; width:24px;
+  background:
+    radial-gradient(circle 5px at 12px 14%, var(--rl-bg) 49%, transparent 50%),
+    radial-gradient(circle 5px at 12px 35%, var(--rl-bg) 49%, transparent 50%),
+    radial-gradient(circle 5px at 12px 57%, var(--rl-bg) 49%, transparent 50%),
+    radial-gradient(circle 5px at 12px 78%, var(--rl-bg) 49%, transparent 50%);
+}
+
+/* ── Modale César ─────────────────────────────── */
+.modal-sm { max-width: 440px; }
+.caesar-inner {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 20px; text-align: center;
+}
+.caesar-img {
+  width: 100%; max-height: 280px;
+  object-fit: cover; object-position: top;
+  filter: sepia(0.5) saturate(0.6) brightness(0.7);
+  border: 2px solid var(--rl-grey);
+}
+.caesar-caption {
+  font-family: var(--font-type); font-size: 0.82rem;
+  color: var(--rl-grey-lt); line-height: 2;
+}
+.caesar-hint {
+  margin-top: 8px;
+  color: var(--rl-paper-dk);
+  font-size: 0.88rem;
+  border-top: 1px solid var(--rl-grey); padding-top: 10px;
+}
+
+/* ── Modale Cadenas ───────────────────────────── */
+.locker-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px; align-items: start; padding: 30px;
+}
+@media (max-width:680px) { .locker-inner { grid-template-columns:1fr; } }
+
+.locker-bg-img {
+  width: 100%; border-radius: 2px;
+  filter: sepia(0.3) saturate(0.7) brightness(0.6);
+  border: 1px solid var(--rl-grey);
+  display: block;
+}
+/* Étiquettes des bouteilles */
+.bottle-tags { position: absolute; top:0; left:0; width:100%; }
+.btag {
+  position: absolute;
+  background: rgba(15,12,8,0.85);
+  border: 1px solid var(--rl-grey);
+  padding: 5px 8px;
+  font-family: var(--font-type); text-align: center;
+  line-height: 1.3;
+  box-shadow: 1px 1px 0 var(--rl-grey);
+}
+/* Positionnement relatif car dans .locker-inner côté image */
+.locker-bg-img + .bottle-tags { display: none; } /* géré dans HTML directement */
+
+.btag-num {
+  display: block; font-size: 1.4rem; color: var(--rl-paper);
+  font-family: var(--font-hand);
+}
+.btag-label { font-size: 0.55rem; letter-spacing: 1px; color: var(--rl-grey-lt); }
+
+/* Étiquettes disposées sur l'image via position relative */
+div.locker-image-wrap { position: relative; }
+
+.padlock-entry {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.padlock-label {
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 3px; color: var(--rl-grey-lt); text-transform: uppercase;
+}
+.padlock-digits {
+  font-family: var(--font-type); font-size: 2.2rem;
+  color: var(--rl-paper); letter-spacing: 8px;
+  background: #0a0806;
+  border: 1px solid var(--rl-grey);
+  padding: 10px 20px; width: 100%; text-align: center;
+  text-shadow: 0 0 6px rgba(200,184,154,0.4);
+  transition: all 0.2s;
+}
+.padlock-digits.shake {
+  animation: shake 0.35s ease both;
+  color: var(--rl-red-br);
+  border-color: var(--rl-red-br);
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  15%,45%,75% { transform: translateX(-5px); }
+  30%,60%,90% { transform: translateX(5px); }
+}
+.padlock-feedback {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--rl-red-br); min-height: 18px;
+}
+.padlock-keypad {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 6px; width: 100%;
+}
+.pk-btn {
+  padding: 14px; font-family: var(--font-type); font-size: 1.1rem;
+  background: #0f0d0a; color: var(--rl-paper-dk);
+  border: 1px solid #2a2420; cursor: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.pk-btn:hover { background: #1e1a14; color: var(--rl-paper); border-color: var(--rl-beige); }
+.pk-btn:active { background: #2a2418; }
+.pk-clr, .pk-del { font-size: 0.75rem; color: var(--rl-grey-lt); }
+
+.padlock-success {
+  background: rgba(60,50,30,0.5);
+  border: 1px solid var(--rl-beige);
+  padding: 12px 16px;
+  font-family: var(--font-type); font-size: 0.75rem;
+  color: var(--rl-paper); text-align: center; line-height: 1.7;
+}
+
+/* ── Modale PC ────────────────────────────────── */
+.pc-inner {
+  display: grid; grid-template-columns: 1.2fr 0.8fr;
+  gap: 20px; align-items: start;
+}
+@media (max-width:680px) { .pc-inner { grid-template-columns: 1fr; } }
+
+.pc-screen-col { position: relative; }
+.laptop-img {
+  width: 100%; display: block;
+  filter: sepia(0.2) saturate(0.8) brightness(0.6);
+  border: 1px solid var(--rl-grey);
+}
+.terminal-overlay {
+  position: absolute;
+  /* Calé sur l'écran dans l'image du laptop */
+  top: 14%; left: 11%; right: 10%; bottom: 36%;
+  background: rgba(5,2,0,0.88);
+  border: 1px solid rgba(200,98,10,0.4);
+  padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(200,98,10,0.15);
+}
+.to-line {
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: var(--rl-grey-lt); line-height: 1.4;
+}
+.to-line.err { color: #c84000; }
+.to-line strong { color: #ff3c00; font-size: 0.75rem; }
+.to-progressbar {
+  width: 100%; height: 10px;
+  background: #1a0800;
+  border: 1px solid #5a1400;
+  position: relative; overflow: hidden;
+}
+.to-fill {
+  height: 100%;
+  background: linear-gradient(to right, #5a0000, #c84000);
+  width: 68%;
+  animation: prog-fill 30s linear forwards;
+  box-shadow: 1px 0 6px rgba(200,64,0,0.7) inset;
+}
+/* La barre progresse jusqu'à 99% en 5 minutes */
+@keyframes prog-fill { to { width: 99%; } }
+
+.pc-postit {
+  align-self: flex-start;
+  background: #e8d88a;
+  color: #1e1808;
+  font-family: var(--font-hand); font-size: 0.85rem;
+  padding: 4px 8px; line-height: 1.3;
+  transform: rotate(-2deg);
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.4);
+  width: fit-content;
+}
+.pin-zone { margin-top: auto; border-top: 1px solid rgba(200,98,10,0.2); padding-top: 8px; }
+.pin-label { font-family: var(--font-mono); font-size: 0.6rem; color: rgba(200,98,10,0.7); letter-spacing: 2px; margin-bottom: 4px; }
+.pin-input {
+  width: 100%; padding: 6px;
+  background: #050200; border: 1px solid rgba(200,98,10,0.5);
+  color: #ff3c00; font-family: var(--font-mono); font-size: 1.2rem;
+  letter-spacing: 10px; text-align: center;
+  outline: none; cursor: text;
+}
+.pin-input:focus { border-color: rgba(200,98,10,0.9); box-shadow: 0 0 8px rgba(200,64,0,0.3); }
+.pin-input.shake { animation: shake 0.35s ease both; border-color: var(--rl-red-br); }
+.pc-feedback {
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: var(--rl-red-br); min-height: 16px; margin-top: 4px;
+}
+
+/* Zone jeton 3D */
+.token-col {
+  background: #080604;
+  border: 1px solid var(--rl-grey);
+  min-height: 300px;
+  display: flex; align-items: center; justify-content: center;
+}
+.token-locked {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 14px; text-align: center; padding: 24px;
+}
+.tl-icon { font-size: 2.5rem; color: #2a2418; }
+.tl-text {
+  font-family: var(--font-type); font-size: 0.75rem;
+  color: var(--rl-grey); line-height: 1.7;
+}
+.tl-text small { color: #2a2418; }
+.token-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+.token-header { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 3px; color: var(--rl-grey); }
+#token-canvas { display: block; cursor: grab; }
+#token-canvas:active { cursor: grabbing; }
+.token-hint { font-family: var(--font-mono); font-size: 0.58rem; color: #2a2418; }
+
+/* ════════════════════════════════════════════════
+   ÉCRANS DE FIN
+   ════════════════════════════════════════════════ */
+.ending-screen {
+  display: none;
+  align-items: center; justify-content: center; flex-direction: column;
+}
+.ending-screen.active { display: flex; }
+
+.victory-screen {
+  background: var(--rl-victory); /* vert-eau pâle et maladif */
+}
+.gameover-screen {
+  background: #000;             /* noir absolu */
+}
+
+.ending-content {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 20px; text-align: center;
+  padding: 40px; max-width: 500px;
+}
+
+.ending-symbol {
+  font-size: 4rem; line-height: 1;
+}
+.victory-screen  .ending-symbol { color: #3a6050; }
+.gameover-screen .ending-symbol { color: #1a1410; }
+
+.ending-content h1 {
+  font-family: var(--font-hand); font-size: 2.2rem; font-weight: 700;
+}
+.victory-screen  .ending-content h1 { color: #1a3028; }
+.gameover-screen .ending-content h1 { color: #3a3028; }
+
+.ending-content p {
+  font-family: var(--font-type); font-size: 0.85rem;
+}
+.victory-screen  .ending-content p { color: #2a4838; }
+.gameover-screen .ending-content p { color: #2a2820; }
+
+.ending-detail {
+  font-size: 0.75rem !important;
+  opacity: 0.7; line-height: 1.8;
+}
+
+/* Scrollbar discrète */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #050402; }
+::-webkit-scrollbar-thumb { background: #2a2418; }
