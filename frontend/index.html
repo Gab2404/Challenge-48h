@@ -60,45 +60,64 @@
      ══════════════════════════════════════════════ -->
 <div id="screen-apartment" class="screen">
 
-  <!-- Fond illustré Rusty Lake -->
-  <div id="apt-bg" class="apt-bg"></div>
-  <!-- Vignette d'ambiance -->
-  <div class="apt-vignette"></div>
+  <!-- GAME STAGE: enforce 3:2 ratio, hotspots are % of THIS div -->
+  <div class="game-stage">
+    <div class="stage-inner">
 
-  <!-- Timer affiché directement sur le laptop dans la vue d'ensemble -->
-  <div id="apt-timer-overlay" class="apt-timer-overlay">
-    <span id="apt-timer">05:00</span>
+      <!-- Background -->
+      <div class="stage-bg"></div>
+
+      <!-- Timer (25% left, 63% top) -->
+      <div id="apt-timer-overlay" class="apt-timer-overlay">
+        <span id="apt-timer">05:00</span>
+      </div>
+
+      <!--
+        HOTSPOTS — all % calculated from 1536x1024 image dimensions:
+          left   = pixel_x / 1536 * 100
+          top    = pixel_y / 1024 * 100
+          width  = pixel_w / 1536 * 100
+          height = pixel_h / 1024 * 100
+      -->
+      <div class="hotspot-layer">
+        <!-- Laptop (PC allumé, centre-gauche) -->
+        <div class="rl-hotspot" id="hs-laptop" data-modal="modal-pc"
+             style="left:21.0%;top:59.0%;width:11.5%;height:13.0%;">
+          <div class="hl-dot"></div>
+        </div>
+        <!-- Coffre avec cadenas (bas gauche, SOUS la table) -->
+        <div class="rl-hotspot" id="hs-trash" data-modal="modal-trash"
+             style="left:1.0%;top:68.0%;width:9.5%;height:13.5%;">
+          <div class="hl-dot"></div>
+        </div>
+        <!-- Table + Bouteilles (gauche) -->
+        <div class="rl-hotspot" id="hs-locker" data-modal="modal-locker"
+             style="left:0%;top:43.0%;width:18.0%;height:26.0%;">
+          <div class="hl-dot"></div>
+        </div>
+        <!-- Portrait César (centre-droit, mur du fond) -->
+        <div class="rl-hotspot" id="hs-caesar" data-modal="modal-caesar"
+             style="left:47.5%;top:17.0%;width:11.0%;height:29.0%;">
+          <div class="hl-dot"></div>
+        </div>
+        <!-- Boîtes de repas (centre, sol) -->
+        <div class="rl-hotspot" id="hs-waste" data-modal="modal-trash"
+             style="left:32.5%;top:72.0%;width:21.0%;height:17.5%;">
+          <div class="hl-dot"></div>
+        </div>
+        <!-- La Porte (droite) -->
+        <div class="rl-hotspot" id="hs-door"
+             style="left:70.3%;top:17.0%;width:16.5%;height:57.0%;">
+          <div class="hl-dot"></div>
+        </div>
+      </div>
+
+      <div class="apt-vignette"></div>
+    </div>
   </div>
 
-  <!-- HOTSPOTS — zones cliquables sur le décor -->
-  <div class="hotspot-layer">
-
-    <!-- Corbeille / caisse (bas gauche) -->
-    <div class="rl-hotspot" id="hs-trash" data-modal="modal-trash"
-         style="left:3%; bottom:8%; width:12%; height:20%;" title="Examiner">
-      <div class="hl-dot"></div>
-    </div>
-
-    <!-- Portrait de Jules César (haut DROITE du mur) -->
-    <div class="rl-hotspot" id="hs-caesar" data-modal="modal-caesar"
-         style="right:3%; top:13%; width:14%; height:28%;" title="Regarder">
-      <div class="hl-dot"></div>
-    </div>
-
-    <!-- Bouteilles + Cadenas (bureau gauche) -->
-    <div class="rl-hotspot" id="hs-locker" data-modal="modal-locker"
-         style="left:5%; top:42%; width:16%; height:30%;" title="Examiner">
-      <div class="hl-dot"></div>
-    </div>
-
-    <!-- Laptop (centre bas) -->
-    <div class="rl-hotspot" id="hs-laptop" data-modal="modal-pc"
-         style="left:35%; bottom:18%; width:24%; height:26%;" title="S'approcher">
-      <div class="hl-dot"></div>
-    </div>
-
-  </div>
 </div>
+
 
 <!-- ══════════════════════════════════════════════
      MODALES

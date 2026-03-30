@@ -387,6 +387,9 @@ const Phase3 = (() => {
         if (id) {
           AudioManager.playKey();
           ModalManager.open(id);
+        } else if (hs.id === 'hs-door') {
+          AudioManager.playKey();
+          alert("La porte est verrouillée de l'extérieur.");
         }
       });
     });
