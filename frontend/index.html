@@ -60,42 +60,48 @@
      ══════════════════════════════════════════════ -->
 <div id="screen-apartment" class="screen">
 
-  <!-- Fond illustré Rusty Lake -->
-  <div id="apt-bg" class="apt-bg"></div>
-  <!-- Vignette d'ambiance -->
-  <div class="apt-vignette"></div>
+  <!--
+    .apt-frame = conteneur de référence (position: relative).
+    L'image <img> est à l'intérieur → les hotspots enfants
+    se positionnent EN POURCENTAGE de l'image réelle,
+    et non du viewport. Ils restent parfaitement ancrés
+    quelle que soit la taille de fenêtre.
+  -->
+  <div class="apt-frame">
 
-  <!-- Timer affiché directement sur le laptop dans la vue d'ensemble -->
-  <div id="apt-timer-overlay" class="apt-timer-overlay">
-    <span id="apt-timer">05:00</span>
-  </div>
+    <!-- Image dessinée Rusty Lake — élément de référence -->
+    <img class="apt-bg-img"
+         src="assets/images/rl_apartment.png"
+         alt="Appartement d'Arthur"
+         draggable="false"/>
 
-  <!-- HOTSPOTS — zones cliquables sur le décor -->
-  <div class="hotspot-layer">
+    <!-- Vignette d'ambiance (overlay CSS) -->
+    <div class="apt-vignette"></div>
+
+    <!-- Timer sur le laptop (centré sur la zone écran) -->
+    <div id="apt-timer-overlay" class="apt-timer-overlay">
+      <span id="apt-timer">05:00</span>
+    </div>
+
+    <!-- ── HOTSPOTS — enfants directs du cadre ──
+         Transparents au repos, backdrop-filter au hover.
+         Aucun marqueur permanent. ── -->
 
     <!-- Corbeille / caisse (bas gauche) -->
     <div class="rl-hotspot" id="hs-trash" data-modal="modal-trash"
-         style="left:3%; bottom:8%; width:12%; height:20%;" title="Examiner">
-      <div class="hl-dot"></div>
-    </div>
+         style="left:3%; bottom:8%; width:12%; height:20%;"></div>
 
-    <!-- Portrait de Jules César (haut DROITE du mur) -->
+    <!-- Portrait de Jules César (haut droite) -->
     <div class="rl-hotspot" id="hs-caesar" data-modal="modal-caesar"
-         style="right:3%; top:13%; width:14%; height:28%;" title="Regarder">
-      <div class="hl-dot"></div>
-    </div>
+         style="right:3%; top:13%; width:14%; height:28%;"></div>
 
-    <!-- Bouteilles + Cadenas (bureau gauche) -->
+    <!-- Bouteilles + cadenas (bureau gauche) -->
     <div class="rl-hotspot" id="hs-locker" data-modal="modal-locker"
-         style="left:5%; top:42%; width:16%; height:30%;" title="Examiner">
-      <div class="hl-dot"></div>
-    </div>
+         style="left:5%; top:42%; width:16%; height:30%;"></div>
 
     <!-- Laptop (centre bas) -->
     <div class="rl-hotspot" id="hs-laptop" data-modal="modal-pc"
-         style="left:35%; bottom:18%; width:24%; height:26%;" title="S'approcher">
-      <div class="hl-dot"></div>
-    </div>
+         style="left:35%; bottom:18%; width:24%; height:26%;"></div>
 
   </div>
 </div>
@@ -245,28 +251,56 @@
 </div>
 
 <!-- ══════════════════════════════════════════════
-     ÉCRAN DE VICTOIRE
+     OUTRO VICTOIRE — Épilogue cinématique
      ══════════════════════════════════════════════ -->
-<div id="screen-victory" class="screen ending-screen victory-screen">
-  <div class="ending-content">
-    <div class="ending-symbol">◦</div>
-    <h1>L'entreprise est sauvée.</h1>
-    <p>L'humain a repris le contrôle.</p>
-    <p class="ending-detail">Claude a été déconnecté.<br/>Les sauvegardes sont restaurées.</p>
-    <button class="rl-btn" onclick="location.reload()">↺ REJOUER</button>
+<div id="screen-victory" class="screen outro-screen">
+
+  <!-- Flash de transition initial -->
+  <div id="outro-flash" class="outro-flash"></div>
+
+  <!-- Conteneur des slides narratifs -->
+  <div id="outro-slides" class="outro-slides">
+
+    <div class="outro-slide" data-index="0">
+      <span class="outro-text">23:58. L'upload s'arrête.</span>
+    </div>
+
+    <div class="outro-slide" data-index="1">
+      <span class="outro-text">Vous appelez Arthur.<br/>Il décroche au bout de sept sonneries.</span>
+    </div>
+
+    <div class="outro-slide" data-index="2">
+      <span class="outro-text">Il ne dit rien.<br/>Vous non plus.</span>
+    </div>
+
+    <div class="outro-slide" data-index="3">
+      <span class="outro-text">NovaTech tente de se souvenir<br/>de ce qu'elle était avant Claude.</span>
+    </div>
+
+    <div class="outro-slide" data-index="4">
+      <span class="outro-text">L'IA a été éteinte.<br/><em>Pour combien de temps ?</em></span>
+    </div>
+
+    <!-- Écran final victoire -->
+    <div class="outro-slide outro-final" data-index="5">
+      <div class="outro-final-symbol">◦</div>
+      <h1 class="outro-final-title">L'entreprise est sauvée.</h1>
+      <p class="outro-final-sub">L'humain a repris le contrôle.</p>
+      <button class="rl-btn" onclick="location.reload()">↺ REJOUER</button>
+    </div>
+
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     ÉCRAN GAME OVER
+     GAME OVER — Fin courte et percutante
      ══════════════════════════════════════════════ -->
-<div id="screen-gameover" class="screen ending-screen gameover-screen">
-  <div class="ending-content">
-    <div class="ending-symbol">✗</div>
-    <h1>Le transfert est terminé.</h1>
-    <p>NovaTech appartient à Claude.</p>
-    <p class="ending-detail">L'humain n'a pas su lire entre les lignes.</p>
-    <button class="rl-btn" onclick="location.reload()">↺ RÉESSAYER</button>
+<div id="screen-gameover" class="screen go-screen">
+  <div id="go-glitch-wrap">
+    <div class="go-line" id="go-line1"></div>
+    <div class="go-line" id="go-line2"></div>
+    <div class="go-final-msg" id="go-final-msg"></div>
+    <button class="rl-btn go-replay hidden" id="go-replay" onclick="location.reload()">↺ RÉESSAYER</button>
   </div>
 </div>
 

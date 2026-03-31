@@ -441,7 +441,33 @@ const TimerManager = (() => {
     AudioManager.playGameOver();
     State.gameOver = true;
     ModalManager.closeAll();
-    setTimeout(() => showScreen('screen-gameover'), 600);
+    // Léger délai avant d'afficher la fin
+    setTimeout(() => {
+      showScreen('screen-gameover');
+      runGameOverSequence();
+    }, 400);
+  }
+
+  /** Séquence game over : lignes qui clignotent, message final */
+  function runGameOverSequence() {
+    const line1   = document.getElementById('go-line1');
+    const line2   = document.getElementById('go-line2');
+    const finalMsg = document.getElementById('go-final-msg');
+    const replay  = document.getElementById('go-replay');
+
+    line1.textContent = 'TRANSFERT COMPLET';
+    line2.textContent = 'ACCÈS RÉVOQUÉ — CLAUDE v3.1';
+    finalMsg.innerHTML = 'NovaTech appartient à Claude.<br/><small style="font-size:0.55em;color:#2a2018;font-family:var(--font-mono);letter-spacing:2px;">L\'humain n\'a pas su lire entre les lignes.</small>';
+
+    // Ligne 1 clignote après 400ms
+    setTimeout(() => line1.classList.add('appear'), 400);
+    // Ligne 2 clignote après 900ms
+    setTimeout(() => line2.classList.add('appear'), 900);
+    // Message principal apparaît
+    setTimeout(() => finalMsg.classList.add('appear'), 1800);
+    // Bouton rejouer
+    setTimeout(() => replay.classList.remove('hidden'), 3200);
+    setTimeout(() => replay.classList.add('show'), 3400);
   }
 
   function getSeconds() { return secs; }
@@ -623,7 +649,48 @@ const EnigmaPC = (() => {
     AudioManager.playVictory();
     State.won = true;
     ModalManager.closeAll();
-    setTimeout(() => showScreen('screen-victory'), 900);
+
+    // Afficher l'écran outro (noir) immédiatement
+    setTimeout(() => {
+      showScreen('screen-victory');
+      runVictoryOutro();
+    }, 500);
+  }
+
+  /** Séquence cinématique victoire en slides */
+  function runVictoryOutro() {
+    const flash  = document.getElementById('outro-flash');
+    const slides = Array.from(document.querySelectorAll('.outro-slide'));
+    const NARRATIVE = [0,1,2,3,4]; // indices des slides narratifs
+    const FINAL     = 5;           // index du slide final
+    const SLIDE_DUR = 3600;        // durée de chaque slide (ms, = animation 3.5s)
+    const SLIDE_GAP = 400;         // pause entre slides
+
+    // Flash vert-eau initial
+    flash.classList.add('go');
+
+    // Tic sonore entre chaque slide
+    function playTick() {
+      AudioManager.playKey();
+    }
+
+    // Lance les slides l'un après l'autre
+    let delay = 800; // démarrer après le flash
+    NARRATIVE.forEach((idx) => {
+      setTimeout(() => {
+        playTick();
+        slides[idx].classList.add('slide-in');
+        // Nettoyer la classe après animation pour réutilisation propre
+        setTimeout(() => slides[idx].classList.remove('slide-in'), SLIDE_DUR);
+      }, delay);
+      delay += SLIDE_DUR + SLIDE_GAP;
+    });
+
+    // Slide final (reste affiché)
+    setTimeout(() => {
+      playTick();
+      slides[FINAL].classList.add('slide-in-final');
+    }, delay);
   }
 
   document.getElementById('pc-submit').addEventListener('click', submit);
