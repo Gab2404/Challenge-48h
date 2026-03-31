@@ -6,7 +6,7 @@ const waveformEl = document.getElementById('waveform');
 const transcriptEl = document.getElementById('transcript-text');
 const durationEl = document.getElementById('call-duration');
 
-const TRANSCRIPT = "Allô\u00a0? C'est Max... Dis, tu peux passer chez Arthur\u00a0? Il a été viré ce matin, NovaTech a tout remplacé par cette IA, Claude. Je l'ai eu au téléphone, il était en boucle, il parlait de tout faire sauter... Son appart est ouvert mais il ne répond plus. Va voir s'il te plaît\u00a0!";
+const TRANSCRIPT = "Allô\u00a0? C'est Max... Dis, tu peux passer chez Arthur\u00a0? Il a été viré ce matin, NovaTech a tout remplacé par cette IA, Claude. Je l'ai eu au téléphone, il était en pétard, il parlait de tout faire sauter... Son appart est ouvert mais il ne répond plus. Va voir s'il te plaît\u00a0!";
 
 const TYPING_SPEED = 36;
 let callTimerInterval = null;
@@ -90,7 +90,7 @@ const STATE = {
   casierOuvert: false,
   jetonRecupere: false,
   timerInterval: null,
-  timerSecondes: 10,
+  timerSecondes: 900,
   timerActif: false,
   tentativesTerminal: 0
 };
@@ -504,27 +504,27 @@ const SUBTITLE_CONTENT = {
   },
   tv: {
     speaker: '— narrateur —',
-    text: "L'écran est défoncé. Une bouteille y est encastrée — chiffre gravé dans le verre : 1."
+    text: "L'écran est défoncé. Une bouteille y est encastrée — Chiffre gravé : 1."
   },
   livre: {
     speaker: '— narrateur —',
-    text: "Mastering JavaScript. Un vieux bouquin de dev. Entre les pages, une bouteille vide. Chiffre gravé : 9."
+    text: "Mastering JavaScript. Un vieux bouquin de dev, et une bouteille vide. — Chiffre gravé : 9."
   },
   tableau: {
     speaker: '— narrateur —',
-    text: "Portrait de Jules César."
+    text: "Portrait de Jules César, bizarre..."
   },
   message: {
     speaker: '— narrateur —',
-    text: "« Claude m'a tuer » — écrit à la main sur le mur. Une faute. Intentionnelle ?"
+    text: "Claude m'a tuer..."
   },
   cadenas: {
     speaker: '— narrateur —',
-    text: "Un gros cadenas rouillé. Une bouteille posée contre le mur — chiffre gravé dans le verre : 4."
+    text: "Un gros cadenas rouillé. Une bouteille trône dessus, comme un trophée morbide. — chiffre gravé : 4."
   },
   disques: {
     speaker: '— narrateur —',
-    text: "Des disques durs empilés. Une bouteille trône dessus, comme un trophée morbide. Chiffre gravé : 2."
+    text: "Des disques durs empilés, et une bouteille vide posée sur un coin. — Chiffre gravé : 2."
   }
 };
 
