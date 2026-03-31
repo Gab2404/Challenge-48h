@@ -405,7 +405,7 @@ function attachModalListeners(id) {
     const errEl = document.getElementById('terminal-error');
     function validateTerminal() {
       const val = inp.value.trim().toUpperCase();
-      if (val === 'PENT') {
+      if (val === 'OMTL') {
         closeModal();
         triggerVictory();
       } else {
