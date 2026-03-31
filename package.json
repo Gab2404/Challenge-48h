@@ -1,0 +1,16 @@
+{
+  "name": "challenge-48h-escape-game",
+  "version": "1.0.0",
+  "description": "Escape game interactif — Claude m'a tuer",
+  "scripts": {
+    "start": "npx -y serve ./frontend",
+    "open": "powershell -Command \"Start-Process http://localhost:3000/index.html\"",
+    "game": "npx -y serve ./frontend && npm run open"
+  },
+  "keywords": [
+    "escape-game",
+    "interactive"
+  ],
+  "author": "Titouan",
+  "license": "ISC"
+}
