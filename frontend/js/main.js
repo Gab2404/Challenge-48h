@@ -90,7 +90,7 @@ const STATE = {
   casierOuvert: false,
   jetonRecupere: false,
   timerInterval: null,
-  timerSecondes: 900,
+  timerSecondes: 10,
   timerActif: false,
   tentativesTerminal: 0
 };
@@ -179,6 +179,8 @@ function startRoomTimer() {
     if (STATE.timerSecondes <= 0) {
       clearInterval(STATE.timerInterval);
       hudTimer.textContent = '00:00';
+      closeModal();
+      triggerDefeat();
     }
   }, 1000);
 }
@@ -603,6 +605,30 @@ function triggerVictory() {
 }
 
 document.getElementById('btn-rejouer').addEventListener('click', () => window.location.reload());
+
+/* ─ DÉFAITE ─ */
+function triggerDefeat() {
+  clearInterval(STATE.timerInterval);
+  STATE.timerActif = false;
+  const screenDefeat = document.getElementById('screen-defeat');
+  goToScreen(screenRoom, screenDefeat);
+  const lines = ['dl1', 'dl2', 'dl3', 'dl4'];
+  lines.forEach((id, i) => {
+    setTimeout(() => {
+      document.getElementById(id).classList.add('show');
+    }, 400 + i * 600);
+  });
+  const barWrap = document.getElementById('defeat-bar-wrap');
+  const barFill = document.getElementById('defeat-bar-fill');
+  const btnRej = document.getElementById('btn-rejouer-defaite');
+  setTimeout(() => {
+    barWrap.classList.add('show');
+    setTimeout(() => barFill.classList.add('go'), 100);
+  }, 400 + lines.length * 600);
+  setTimeout(() => btnRej.classList.add('show'), 400 + lines.length * 600 + 2400);
+}
+
+document.getElementById('btn-rejouer-defaite').addEventListener('click', () => window.location.reload());
 
 /* Écran 2 → Écran 3 */
 btnSuivant.addEventListener('click', () => {
