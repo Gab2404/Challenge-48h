@@ -1,4 +1,4 @@
-﻿    *,
+﻿*,
     *::before,
     *::after {
       box-sizing: border-box;
@@ -215,7 +215,7 @@
       user-select: none;
       text-align: left;
       opacity: 0;
-      animation: fadeInUp 0.6s 0.45s ease forwards, glitch 7s 1.2s infinite;
+      animation: fadeInUp 0.6s 0.45s ease forwards;
       /* Légère ombre chaude qui rappelle la lueur du PC */
       text-shadow:
         0 0 80px rgba(200, 80, 20, 0.25),
@@ -224,23 +224,7 @@
 
     .game-title::before,
     .game-title::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-    }
-
-    .game-title::before {
-      color: #e84025;
-      clip-path: polygon(0 18%, 100% 18%, 100% 34%, 0 34%);
-      animation: glitch-r 7s 1.2s infinite;
-    }
-
-    .game-title::after {
-      color: #20c97a;
-      clip-path: polygon(0 60%, 100% 60%, 100% 76%, 0 76%);
-      animation: glitch-b 7s 1.2s infinite;
+      display: none;
     }
 
     @keyframes glitch {
@@ -1691,5 +1675,90 @@
     #btn-rejouer:hover {
       background: #e8e6df;
       color: #07070a;
+    }
+
+    /* ══════════════════════════════════════════
+       SOUS-TITRES CINÉMATOGRAPHIQUES
+    ══════════════════════════════════════════ */
+    #subtitle-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      padding: 20px 10vw 28px;
+      text-align: center;
+      pointer-events: none;
+
+      /* fond dégradé cinéma */
+      background: linear-gradient(
+        to top,
+        rgba(5, 4, 6, 0.88) 0%,
+        rgba(5, 4, 6, 0.72) 55%,
+        transparent 100%
+      );
+
+      /* état initial : caché */
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    #subtitle-bar.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #subtitle-speaker {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 5px;
+      color: rgba(217, 119, 87, 0.65);
+      text-transform: uppercase;
+      margin-bottom: 7px;
+      min-height: 14px;
+      transition: opacity 0.2s;
+    }
+
+    #subtitle-text {
+      font-family: 'DM Sans', sans-serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(14px, 1.8vw, 19px);
+      color: rgba(232, 230, 223, 0.92);
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      /* légère ombre portée pour lisibilité sur n'importe quel fond */
+      text-shadow:
+        0 1px 12px rgba(5, 4, 6, 0.9),
+        0 0 40px rgba(5, 4, 6, 0.6);
+      min-height: 28px;
+    }
+
+    /* curseur clignotant de machine à écrire */
+    #subtitle-text .sub-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 0.85em;
+      background: rgba(217, 119, 87, 0.7);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: subCursorBlink 0.75s step-end infinite;
+    }
+
+    @keyframes subCursorBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* flicker pour la lumière */
+    #subtitle-bar.flicker-mode #subtitle-text {
+      animation: subFlicker 3s ease infinite;
+    }
+
+    @keyframes subFlicker {
+      0%, 92%, 96%, 100% { opacity: 1; }
+      93%                 { opacity: 0.35; }
+      97%                 { opacity: 0.6; }
     }
   </style>

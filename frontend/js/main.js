@@ -90,7 +90,7 @@ const STATE = {
   casierOuvert: false,
   jetonRecupere: false,
   timerInterval: null,
-  timerSecondes: 300,
+  timerSecondes: 900,
   timerActif: false,
   tentativesTerminal: 0
 };
@@ -151,7 +151,13 @@ function buildHotspots() {
       el.style.fontFamily = 'Share Tech Mono, monospace';
       el.textContent = h.id;
     }
-    el.addEventListener('click', () => openModal(h.id));
+    el.addEventListener('click', () => {
+      if (h.id in SUBTITLE_CONTENT) {
+        showSubtitle(h.id);
+      } else {
+        openModal(h.id);
+      }
+    });
     screenRoom.appendChild(el);
   });
 }
@@ -471,7 +477,102 @@ function attachModalListeners(id) {
   }
 }
 
-/* ─ TIMER DANS LA MODALE PC ─ */
+/* ─ SOUS-TITRES CINÉMATOGRAPHIQUES ─ */
+const subtitleBar  = document.getElementById('subtitle-bar');
+const subtitleText = document.getElementById('subtitle-text');
+const subtitleSpkr = document.getElementById('subtitle-speaker');
+
+let subtitleTypingInterval = null;
+let subtitleHideTimeout    = null;
+
+// Textes des sous-titres (voix intérieure du joueur)
+const SUBTITLE_CONTENT = {
+  lumiere: {
+    speaker: '— narrateur —',
+    text: "Ce faux contact me tape sur le système… L'ampoule clignote depuis des heures. Arthur devait détester ça.",
+    flicker: true
+  },
+  canape: {
+    speaker: '— narrateur —',
+    text: "Vêtements d'hier froissés sur l'accoudoir. Des restes de nouilles froides dans une boîte. La déprime totale."
+  },
+  table: {
+    speaker: '— narrateur —',
+    text: "Encore des emballages de fast-food. Des cadavres de bouteilles. Ça ne m'aidera pas."
+  },
+  tv: {
+    speaker: '— narrateur —',
+    text: "L'écran est défoncé. Une bouteille y est encastrée — chiffre gravé dans le verre : 1."
+  },
+  livre: {
+    speaker: '— narrateur —',
+    text: "Mastering JavaScript. Un vieux bouquin de dev. Entre les pages, une bouteille vide. Chiffre gravé : 9."
+  },
+  tableau: {
+    speaker: '— narrateur —',
+    text: "Portrait de Jules César."
+  },
+  message: {
+    speaker: '— narrateur —',
+    text: "« Claude m'a tuer » — écrit à la main sur le mur. Une faute. Intentionnelle ?"
+  },
+  cadenas: {
+    speaker: '— narrateur —',
+    text: "Un gros cadenas rouillé. Une bouteille posée contre le mur — chiffre gravé dans le verre : 4."
+  },
+  disques: {
+    speaker: '— narrateur —',
+    text: "Des disques durs empilés. Une bouteille trône dessus, comme un trophée morbide. Chiffre gravé : 2."
+  }
+};
+
+function showSubtitle(id) {
+  const data = SUBTITLE_CONTENT[id];
+  if (!data) return;
+
+  // Annuler tout en cours
+  clearInterval(subtitleTypingInterval);
+  clearTimeout(subtitleHideTimeout);
+
+  // Réinitialiser les classes
+  subtitleBar.className = '';
+  subtitleBar.classList.add('visible');
+  if (data.flicker) subtitleBar.classList.add('flicker-mode');
+
+  subtitleSpkr.textContent = data.speaker || '';
+
+  // Machine à écrire
+  let i = 0;
+  subtitleText.innerHTML = '<span class="sub-cursor"></span>';
+  subtitleTypingInterval = setInterval(() => {
+    if (i < data.text.length) {
+      subtitleText.innerHTML =
+        data.text.slice(0, i + 1) + '<span class="sub-cursor"></span>';
+      i++;
+    } else {
+      clearInterval(subtitleTypingInterval);
+      // Masquer après lecture estimée (40 ms/char + 2 s de buffer)
+      const readTime = Math.max(2800, data.text.length * 42 + 2000);
+      subtitleHideTimeout = setTimeout(hideSubtitle, readTime);
+    }
+  }, 30);
+}
+
+function hideSubtitle() {
+  subtitleBar.classList.remove('visible');
+  setTimeout(() => {
+    subtitleText.innerHTML  = '';
+    subtitleSpkr.textContent = '';
+    subtitleBar.classList.remove('flicker-mode');
+  }, 380);
+}
+
+// Clic sur la salle = ferme les sous-titres
+screenRoom.addEventListener('click', e => {
+  if (e.target === screenRoom) hideSubtitle();
+});
+
+
 function updateTerminalTimer() {
   const tick = setInterval(() => {
     const el = document.getElementById('modal-timer-val');
