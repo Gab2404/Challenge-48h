@@ -405,7 +405,7 @@ function attachModalListeners(id) {
     const errEl = document.getElementById('terminal-error');
     function validateTerminal() {
       const val = inp.value.trim().toUpperCase();
-      if (val === 'LAJP') {
+      if (val === 'PENT') {
         closeModal();
         triggerVictory();
       } else {
@@ -635,6 +635,7 @@ btnSuivant.addEventListener('click', () => {
   clearInterval(callTimerInterval);
   goToScreen(screenCall, screenRoom);
   buildHotspots();
+  window.startRoomFlicker();
   try {
     const ambiance = new Audio('assets/audio/ventilation.mp3');
     ambiance.loop = true;
@@ -642,3 +643,43 @@ btnSuivant.addEventListener('click', () => {
     ambiance.play();
   } catch (e) { /* pas de fichier audio — silencieux */ }
 });
+
+/* ══════════════════════════════════════════
+   FLICKER ENGINE — ampoule défaillante
+══════════════════════════════════════════ */
+(function initFlicker() {
+  const overlay = document.getElementById('flicker-overlay');
+  if (!overlay) return;
+
+  let spikeTimeout = null;
+
+  function startIdleFlicker() {
+    overlay.classList.remove('spiking');
+    overlay.classList.add('idle');
+  }
+
+  function triggerSpike() {
+    overlay.classList.remove('idle');
+    overlay.classList.add('spiking');
+    overlay.addEventListener('animationend', () => {
+      overlay.classList.remove('spiking');
+      overlay.classList.add('idle');
+      scheduleNextSpike();
+    }, { once: true });
+  }
+
+  function scheduleNextSpike() {
+    const delay = 10000 + Math.random() * 12000;
+    spikeTimeout = setTimeout(triggerSpike, delay);
+  }
+
+  window.startRoomFlicker = function () {
+    startIdleFlicker();
+    scheduleNextSpike();
+  };
+
+  window.stopRoomFlicker = function () {
+    clearTimeout(spikeTimeout);
+    overlay.classList.remove('idle', 'spiking');
+  };
+})();

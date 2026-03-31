@@ -1554,6 +1554,59 @@
       animation: flickerLight 1.8s ease-in-out infinite;
     }
 
+    /* ══════════════════════════════════════════
+       FLICKER OVERLAY — ampoule défaillante
+       Logique : état de base = image au naturel.
+       L'overlay ajoute du noir UNIQUEMENT lors
+       des clignotements (opacity 0 au repos).
+    ══════════════════════════════════════════ */
+
+    /* Couche noire — invisible au repos, s'allume lors des flashs */
+    #flicker-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9; /* au-dessus de l'image, sous le HUD (z-index 20) */
+      background: #050406;
+      opacity: 0; /* TRANSPARENT par défaut = image naturelle */
+    }
+
+    /* Idle : micro-frémissements quasi imperceptibles — tension sourde */
+    @keyframes flicker-idle {
+       0%    { opacity: 0;    }
+      10%    { opacity: 0.06; }
+      12%    { opacity: 0;    }
+      45%    { opacity: 0.04; }
+      47%    { opacity: 0;    }
+      78%    { opacity: 0.05; }
+      80%    { opacity: 0;    }
+     100%    { opacity: 0;    }
+    }
+
+    /* Spike : coups de noir brutaux — la lumière flanche vraiment */
+    @keyframes flicker-spike {
+       0%   { opacity: 0;    }
+       3%   { opacity: 0.88; }
+       6%   { opacity: 0.12; }
+       9%   { opacity: 0.82; }
+      13%   { opacity: 0.08; }
+      16%   { opacity: 0.95; }
+      22%   { opacity: 0.25; }
+      26%   { opacity: 0.85; }
+      30%   { opacity: 0.04; }
+      35%   { opacity: 0.70; }
+      40%   { opacity: 0;    }
+     100%   { opacity: 0;    }
+    }
+
+    #flicker-overlay.idle {
+      animation: flicker-idle 6s ease-in-out infinite;
+    }
+
+    #flicker-overlay.spiking {
+      animation: flicker-spike 1.4s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    }
+
     /* ══════════════════════════════
        CASIER OUVERT — JETON PICKUP
     ══════════════════════════════ */
